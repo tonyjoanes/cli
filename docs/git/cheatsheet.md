@@ -7,6 +7,7 @@ A comprehensive guide to common Git scenarios and commands.
 - [Common Workflows](#common-workflows)
 - [Branching](#branching)
 - [Viewing Changes with git diff](#viewing-changes-with-git-diff)
+  - [Creating and Applying Patches](#creating-and-applying-patches)
 - [Staging and Committing](#staging-and-committing)
 - [Undoing Changes](#undoing-changes)
 - [Remote Operations](#remote-operations)
@@ -229,6 +230,179 @@ git diff commit-hash^1 commit-hash
 # Compare stashed changes
 git diff stash@{0}
 ```
+
+### Creating and Applying Patches
+
+Patches allow you to export changes to a file and share them with others who can apply them to their repository.
+
+#### Creating Patches with git diff
+
+```bash
+# Create a patch file from unstaged changes
+git diff > my-changes.patch
+
+# Create a patch file from staged changes
+git diff --staged > my-changes.patch
+
+# Create a patch file from all changes (staged + unstaged)
+git diff HEAD > my-changes.patch
+
+# Create a patch for specific files
+git diff path/to/file > file-changes.patch
+
+# Create a patch comparing two branches
+git diff main feature-branch > feature.patch
+
+# Create a patch for last N commits
+git diff HEAD~3 HEAD > last-3-commits.patch
+
+# Create a patch between specific commits
+git diff abc123 def456 > commits.patch
+```
+
+#### Creating Patches with git format-patch
+
+`git format-patch` creates patches with commit metadata (author, date, message), which is better for sharing commits.
+
+```bash
+# Create patch files for last N commits (one file per commit)
+git format-patch -1  # Last commit
+git format-patch -3  # Last 3 commits
+
+# Create patches for all commits on current branch not in main
+git format-patch main
+
+# Create patches for specific commit range
+git format-patch abc123..def456
+
+# Create a single patch file for multiple commits
+git format-patch -3 --stdout > my-feature.patch
+
+# Create patches in a specific directory
+git format-patch -2 -o patches/
+
+# Create patch with cover letter (useful for patch series)
+git format-patch -3 --cover-letter
+```
+
+#### Applying Patches
+
+```bash
+# Apply a patch created with git diff
+git apply my-changes.patch
+
+# Apply and stage the changes
+git apply --index my-changes.patch
+
+# Check if a patch can be applied without actually applying it
+git apply --check my-changes.patch
+
+# Apply with 3-way merge (helps with conflicts)
+git apply --3way my-changes.patch
+
+# Show stats about what the patch will change
+git apply --stat my-changes.patch
+
+# Show what the patch will do (dry run)
+git apply --check --verbose my-changes.patch
+
+# Apply a patch created with git format-patch (includes commit)
+git am my-feature.patch
+git am patches/*.patch  # Apply multiple patches
+
+# Apply patch and sign off
+git am --signoff my-feature.patch
+
+# Continue after resolving conflicts during git am
+git am --continue
+
+# Skip a patch during git am
+git am --skip
+
+# Abort git am
+git am --abort
+```
+
+#### Reverse/Undo Patches
+
+```bash
+# Reverse apply a patch (undo changes)
+git apply -R my-changes.patch
+# or
+git apply --reverse my-changes.patch
+```
+
+#### Practical Workflow Example
+
+**Scenario: Sharing changes with a colleague**
+
+**Person A (creating the patch):**
+```bash
+# Make some changes to files
+echo "new feature" >> feature.txt
+
+# Create a patch file
+git diff > my-feature.patch
+
+# Send my-feature.patch to colleague via email, Slack, etc.
+```
+
+**Person B (applying the patch):**
+```bash
+# Receive my-feature.patch file
+
+# Check what the patch will do
+git apply --stat my-feature.patch
+git apply --check my-feature.patch
+
+# Apply the patch
+git apply my-feature.patch
+
+# Verify changes
+git diff
+
+# Stage and commit if satisfied
+git add .
+git commit -m "Applied feature patch from colleague"
+```
+
+**Advanced Example: Sharing a series of commits**
+
+**Person A:**
+```bash
+# Create patches for last 3 commits
+git format-patch -3
+
+# This creates:
+# 0001-first-commit.patch
+# 0002-second-commit.patch
+# 0003-third-commit.patch
+
+# Send these patch files to colleague
+```
+
+**Person B:**
+```bash
+# Apply all patches in order
+git am 0001-first-commit.patch
+git am 0002-second-commit.patch
+git am 0003-third-commit.patch
+
+# Or apply all at once
+git am *.patch
+
+# The commits are now in your repository with original
+# commit messages, authors, and dates preserved
+```
+
+#### Tips for Working with Patches
+
+1. **Use `git format-patch` when you want to preserve commit metadata** (author, date, message)
+2. **Use `git diff > file.patch` for simple change sharing** without commit history
+3. **Always use `git apply --check` before applying** to avoid surprises
+4. **Include context with `-U` flag** if patches fail due to line number differences
+5. **Use `--3way` with git apply** for better conflict resolution
+6. **Binary files**: Patches work best with text files; binary files need special handling
 
 ---
 
