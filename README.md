@@ -13,6 +13,7 @@ This repository contains detailed guides covering:
 - **Version Control**: Git workflows and operations
 - **Containerization**: Docker and container management
 - **.NET Development**: .NET CLI tools and commands
+- **Cloud Infrastructure**: Azure CLI for cloud resource management
 - **System Administration**: Windows, Linux, and cross-platform utilities
 
 Each guide is designed to be:
@@ -55,6 +56,20 @@ Each guide is designed to be:
   - Common development workflows
   - Performance optimization tips
 
+### Azure
+- **[Azure CLI Guide](docs/azure/cli-guide.md)** - Complete Azure command line interface reference
+  - Authentication and account management
+  - Resource groups and resource management
+  - Virtual machines and compute services
+  - App Service and web applications
+  - Storage accounts and data management
+  - Databases (SQL, PostgreSQL, MySQL, Cosmos DB)
+  - Networking (VNets, NSGs, load balancers)
+  - Container services (ACI, ACR, AKS)
+  - Azure Functions and serverless
+  - Key Vault for secrets management
+  - Monitoring and diagnostics
+
 ### Windows
 - **[Windows Command Line Tips](docs/windows/tips-and-tricks.md)** - Windows CMD and PowerShell productivity guide
   - Command Prompt (CMD) essentials
@@ -77,6 +92,8 @@ docs/
 ├── docker/
 │   └── commands-guide.md
 ├── dotnet/
+│   └── cli-guide.md
+├── azure/
 │   └── cli-guide.md
 └── windows/
     └── tips-and-tricks.md
@@ -156,6 +173,7 @@ cli/
 │   ├── git/               # Git guides
 │   ├── docker/            # Docker guides
 │   ├── dotnet/            # .NET CLI guides
+│   ├── azure/             # Azure CLI guides
 │   └── windows/           # Windows CLI guides
 └── README.md              # This file
 ```
@@ -166,6 +184,7 @@ cli/
 - [Git Documentation](https://git-scm.com/doc)
 - [Docker Documentation](https://docs.docker.com/)
 - [.NET CLI Documentation](https://learn.microsoft.com/en-us/dotnet/core/tools/)
+- [Azure CLI Documentation](https://learn.microsoft.com/en-us/cli/azure/)
 - [PowerShell Documentation](https://learn.microsoft.com/en-us/powershell/)
 
 ### Learning Resources
